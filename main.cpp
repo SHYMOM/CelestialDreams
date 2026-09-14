@@ -2474,7 +2474,7 @@ int main(int argc, char **argv) {
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
     glutInitWindowSize(1000, 800);
     glutInitWindowPosition(100, 80);
-    glutCreateWindow("Celestial Dreams - Phase 4 Complete (All Devs)");
+    glutCreateWindow("Celestial Dreams");
     init();
     glutDisplayFunc(display);
     glutMouseFunc(mouseClick);
