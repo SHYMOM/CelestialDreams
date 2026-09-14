@@ -1,11 +1,15 @@
 // ============================================================
-// Phase 3 - DEV1 + DEV2 + DEV3: + Journey + Jupiter Landing
+// Phase 4 - Complete (All Devs)
 // ============================================================
 
+#include <iostream>
+#include <cmath>
+#include <GL/gl.h>
 #include <GL/glut.h>
-#include <math.h>
 #include <stdlib.h>
+#include <math.h>
 #include <time.h>
+#include <cstdio>
 
 #define PI 3.14159265f
 
@@ -70,7 +74,7 @@ float laserY = 0.0f;
 float laserActive = 0.0f;
 float astroAimAngle = 0.0f;
 
-// DEV4 variables (placeholders)
+// DEV4 variables
 bool wakeMode = false;
 float wakeTimer = 0.0f;
 float wakeHeadLift = 0.0f;
@@ -1320,17 +1324,352 @@ void drawJupiterLandingScene() {
 }
 
 // ============================================================
-//  DEV4 SCENES - Stubs
+//  DEV4 - WAKE UP OBJECT FUNCTIONS
 // ============================================================
-void drawWakeUpScene() {
-    drawRect(-100, -100, 200, 200, 0.0f, 0.0f, 0.0f);
-    glColor3f(0.5f, 0.5f, 0.5f);
-    drawLabel(-30, 0, "Coming in Phase 4", GLUT_BITMAP_HELVETICA_18);
+
+void drawWakeUpWall() {
+    glBegin(GL_QUADS);
+    glColor3f(0.48f, 0.75f, 0.92f);
+    glVertex2f(-100, 100);
+    glVertex2f(100, 100);
+    glColor3f(0.22f, 0.38f, 0.45f);
+    glVertex2f(100, -20);
+    glVertex2f(-100, -20);
+    glEnd();
 }
+
+void drawWakeUpFloor() {
+    glBegin(GL_QUADS);
+    glColor3f(0.55f, 0.18f, 0.12f);
+    glVertex2f(-100, -20);
+    glVertex2f(100, -20);
+    glColor3f(0.35f, 0.10f, 0.06f);
+    glVertex2f(100, -100);
+    glVertex2f(-100, -100);
+    glEnd();
+}
+
+void drawWakeWindows() {
+    drawRect(-80, 42, 22, 28, 0.25f, 0.15f, 0.08f);
+    drawRect(-77, 45, 16, 22, 0.85f, 0.90f, 0.95f);
+    drawRect(-77, 45, 16, 12, 0.85f, 0.45f, 0.15f);
+    drawCircle(-66, 57, 3.5f, 18, 1.0f, 0.55f, 0.10f);
+    drawRect(-77, 45, 16, 7, 0.15f, 0.50f, 0.35f);
+    drawRect(55, 42, 22, 28, 0.25f, 0.15f, 0.08f);
+    drawRect(58, 45, 16, 22, 0.95f, 0.88f, 0.80f);
+    drawCircle(66, 52, 5.5f, 18, 1.0f, 0.35f, 0.0f);
+    drawRect(58, 45, 16, 5, 0.30f, 0.15f, 0.08f);
+}
+
+void drawWakeFan() {
+    drawRect(-1, 80, 2, 20, 0.18f, 0.18f, 0.20f);
+    glPushMatrix();
+    glTranslatef(0, 80, 0);
+    glRotatef(fanSpin, 0, 0, 1);
+    drawCircle(0, 0, 3.5f, 18, 0.28f, 0.28f, 0.30f);
+    drawRect(-22, -2, 18, 3.5f, 0.35f, 0.18f, 0.10f);
+    drawRect(4, -2, 18, 3.5f, 0.35f, 0.18f, 0.10f);
+    glPopMatrix();
+}
+
+void drawWakeBoyBody() {
+    glPushMatrix();
+    glTranslatef(0, -6, 0);
+    drawRect(-28, -45, 24, 24, 0.30f, 0.15f, 0.06f);
+    drawRect(-26, -60, 3, 15, 0.18f, 0.08f, 0.02f);
+    drawRect(-7, -60, 3, 15, 0.18f, 0.08f, 0.02f);
+    drawRect(-24, -55, 7, 24, 0.85f, 0.70f, 0.55f);
+    drawRect(-13, -55, 7, 24, 0.85f, 0.70f, 0.55f);
+    drawRect(-26, -60, 9, 5, 0.15f, 0.25f, 0.50f);
+    drawRect(-14, -60, 9, 5, 0.15f, 0.25f, 0.50f);
+    glColor3f(0.15f, 0.35f, 0.70f);
+    glBegin(GL_POLYGON);
+    glVertex2f(-26, -28);
+    glVertex2f(-22, 5);
+    glVertex2f(-8, 5);
+    glVertex2f(-4, -28);
+    glEnd();
+    drawCircle(-15, 5, 3.2f, 18, 0.90f, 0.75f, 0.55f);
+    glPopMatrix();
+}
+
+void drawBoyHeadWake() {
+    float headFollowX = clampFloat((gMouseWX + 15.0f) * 0.06f, -8.0f, 8.0f);
+    float headFollowAngle = clampFloat(headFollowX * 1.5f, -10.0f, 10.0f);
+    glPushMatrix();
+    glTranslatef(-15.0f, 16.0f + wakeHeadLift, 0.0f);
+    glRotatef(wakeHeadTurn + headFollowAngle, 0, 0, 1);
+    glTranslatef(15.0f, -16.0f - wakeHeadLift, 0.0f);
+    drawCircle(-15, 20 + wakeHeadLift, 11, 28, 0.25f, 0.15f, 0.08f);
+    drawCircle(-22, 12 + wakeHeadLift, 9, 28, 0.25f, 0.15f, 0.08f);
+    drawCircle(-8, 12 + wakeHeadLift, 9, 28, 0.25f, 0.15f, 0.08f);
+    drawRect(-28, -2 + wakeHeadLift, 26, 15, 0.25f, 0.15f, 0.08f);
+    drawCircle(-15, 16 + wakeHeadLift, 10.0f, 28, 0.90f, 0.75f, 0.55f);
+    if (wakeHeadLift < 2.0f) {
+        glColor3f(0.0f, 0.0f, 0.0f);
+        glLineWidth(2.0f);
+        glBegin(GL_LINES);
+        glVertex2f(-19.5f, 15.5f + wakeHeadLift);
+        glVertex2f(-16.5f, 15.5f + wakeHeadLift);
+        glVertex2f(-13.5f, 15.5f + wakeHeadLift);
+        glVertex2f(-10.5f, 15.5f + wakeHeadLift);
+        glEnd();
+        drawCircle(-15, 11 + wakeHeadLift, 1, 10, 0.0f, 0.0f, 0.0f);
+    } else {
+        float eyeX = clampFloat(gMouseWX * 0.01f, -1.2f, 1.2f);
+        float eyeY = clampFloat(gMouseWY * 0.006f, -0.6f, 0.6f);
+        drawCircle(-18, 17 + wakeHeadLift, 2.0f, 14, 1.0f, 1.0f, 1.0f);
+        drawCircle(-12, 17 + wakeHeadLift, 2.0f, 14, 1.0f, 1.0f, 1.0f);
+        drawCircle(-18 + eyeX, 16.5f + wakeHeadLift + eyeY, 1.0f, 10, 0.08f, 0.08f, 0.18f);
+        drawCircle(-12 + eyeX, 16.5f + wakeHeadLift + eyeY, 1.0f, 10, 0.08f, 0.08f, 0.18f);
+        drawCircle(-15, 12.0f + wakeHeadLift, 1.5f, 10, 0.08f, 0.0f, 0.0f);
+        glColor3f(0.18f, 0.08f, 0.08f);
+        glLineWidth(2.0f);
+        glBegin(GL_LINES);
+        glVertex2f(-21, 20 + wakeHeadLift);
+        glVertex2f(-17, 22 + wakeHeadLift);
+        glVertex2f(-14, 22 + wakeHeadLift);
+        glVertex2f(-10, 20 + wakeHeadLift);
+        glEnd();
+    }
+    glPopMatrix();
+}
+
+void drawWakeArms() {
+    glPushMatrix();
+    glTranslatef(0, -6, 0);
+    glPushMatrix();
+    glTranslatef(-25, wakeHeadLift * 0.5f, 0);
+    glRotatef(30 - wakeHeadLift * 5, 0, 0, 1);
+    drawRect(-3, -18, 6, 20, 0.15f, 0.35f, 0.70f);
+    drawCircle(0, -18, 3, 10, 0.90f, 0.75f, 0.55f);
+    glPopMatrix();
+    glPushMatrix();
+    glTranslatef(-5, wakeHeadLift * 0.5f, 0);
+    glRotatef(-30 + wakeHeadLift * 5, 0, 0, 1);
+    drawRect(-3, -18, 6, 20, 0.15f, 0.35f, 0.70f);
+    drawCircle(0, -18, 3, 10, 0.90f, 0.75f, 0.55f);
+    glPopMatrix();
+    glPopMatrix();
+}
+
+void drawWakeLamp() {
+    glPushMatrix();
+    glTranslatef(20, -13, 0);
+    drawRect(-60, -7, 20, 4, 0.12f, 0.12f, 0.14f);
+    drawRect(-51, -3, 2, 18, 0.20f, 0.20f, 0.22f);
+    glColor3f(0.10f, 0.30f, 0.75f);
+    glBegin(GL_QUADS);
+    glVertex2f(-65, 15);
+    glVertex2f(-35, 15);
+    glVertex2f(-42, 28);
+    glVertex2f(-58, 28);
+    glEnd();
+    drawCircle(-50, -5, 1.5f, 18, 0.35f, 0.35f, 0.38f);
+    glPopMatrix();
+}
+
+void drawWakeBookshelf() {
+    drawRect(44, -20, 36, 55, 0.38f, 0.20f, 0.06f);
+    drawRect(47, 20, 30, 2, 0.32f, 0.16f, 0.05f);
+    drawRect(47, 0, 30, 2, 0.32f, 0.16f, 0.05f);
+    drawRect(49, 22, 5, 12, 0.60f, 0.15f, 0.10f);
+    drawRect(55, 22, 4, 10, 0.10f, 0.45f, 0.60f);
+    drawRect(60, 22, 6, 11, 0.70f, 0.55f, 0.10f);
+}
+
+void drawWakeLaptop() {
+    glPushMatrix();
+    glTranslatef(-2, -20, 0);
+    drawRect(-6, 0, 12, 8, 0.75f, 0.78f, 0.82f);
+    drawRect(-5, 1, 10, 6, 0.08f, 0.10f, 0.18f);
+    drawRect(-8, -2, 16, 2, 0.65f, 0.68f, 0.72f);
+    glPopMatrix();
+}
+
+void drawWakePlant() {
+    glPushMatrix();
+    glTranslatef(10, -20, 0);
+    drawRect(0, 0, 10, 3, 0.15f, 0.30f, 0.70f);
+    drawRect(0, 3, 9, 3, 0.70f, 0.25f, 0.15f);
+    drawRect(-1, 6, 10, 3, 0.10f, 0.55f, 0.25f);
+    glPushMatrix();
+    glTranslatef(-1, 9, 0);
+    glRotatef(10, 0, 0, 1);
+    drawRect(0, 0, 10, 2.5f, 0.75f, 0.65f, 0.10f);
+    glPopMatrix();
+    glPopMatrix();
+}
+
+void drawWakeClock() {
+    glPushMatrix();
+    glTranslatef(-3, -12, 0);
+    drawCircle(25, 0, 8, 28, 0.10f, 0.45f, 0.55f);
+    drawCircle(25, 0, 7, 28, 0.95f, 0.95f, 1.0f);
+    glPushMatrix();
+    glTranslatef(25, 0, 0);
+    glColor3f(0.10f, 0.45f, 0.55f);
+    glLineWidth(2.0f);
+    glPushMatrix();
+    glRotatef(-clockTime * 12, 0, 0, 1);
+    glBegin(GL_LINES);
+    glVertex2f(0, 0);
+    glVertex2f(0, 6);
+    glEnd();
+    glPopMatrix();
+    glPushMatrix();
+    glRotatef(-clockTime, 0, 0, 1);
+    glBegin(GL_LINES);
+    glVertex2f(0, 0);
+    glVertex2f(4, 0);
+    glEnd();
+    glPopMatrix();
+    glPopMatrix();
+    glBegin(GL_TRIANGLES);
+    glVertex2f(25, 0);
+    glVertex2f(20, -8);
+    glVertex2f(30, -8);
+    glEnd();
+    glPopMatrix();
+}
+
+void drawWakeMouse() {
+    drawCircle(mousePosX, -88, 3, 18, 0.50f, 0.25f, 0.10f);
+    drawCircle(mousePosX + 3, -88, 1.8f, 16, 0.50f, 0.25f, 0.10f);
+}
+
+void drawWakeText() {
+    if (wakeHeadLift >= 2.9f && wakeTimer <= 2.9f) {
+        glColor3f(1.0f, 1.0f, 1.0f);
+        drawLabel(-48, 33 + wakeHeadLift, "Oh! it was just a dream ", GLUT_BITMAP_HELVETICA_18);
+    } else if (wakeTimer >= 3.9f && wakeTimer <= 5.9f) {
+        glColor3f(1.0f, 1.0f, 1.0f);
+        drawLabel(-48, 33 + wakeHeadLift, "Wait what is that?", GLUT_BITMAP_HELVETICA_18);
+    }
+    glColor3f(0.4f, 0.4f, 0.4f);
+    drawLabel(
+        -95, -95, "Click boy = speed up | E = instant wake | Move mouse = head follows", GLUT_BITMAP_HELVETICA_10);
+}
+
+// ==================== WAKE UP SCENE ====================
+
+void drawWakeUpScene() {
+    drawWakeUpWall();
+    drawWakeUpFloor();
+    drawWakeWindows();
+    drawWakeFan();
+    drawWakeBoyBody();
+    drawBoyHeadWake();
+    drawRect(-40, -60, 4, 30, 0.25f, 0.12f, 0.04f);
+    drawRect(25, -60, 4, 30, 0.25f, 0.12f, 0.04f);
+    drawRect(-45, -30, 75, 10, 0.40f, 0.22f, 0.12f);
+    drawRect(-45, -35, 75, 5, 0.25f, 0.12f, 0.04f);
+    drawWakeArms();
+    drawWakeLamp();
+    drawWakeBookshelf();
+    drawWakeLaptop();
+    drawWakePlant();
+    drawWakeClock();
+    drawWakeMouse();
+    drawWakeText();
+}
+
+// ============================================================
+//  DEV4 - THANK YOU OBJECT FUNCTIONS
+// ============================================================
+
+void drawThankYouBackground() {
+    glBegin(GL_QUADS);
+    glColor3f(0.02f, 0.02f, 0.08f);
+    glVertex2f(-100, -100);
+    glVertex2f(100, -100);
+    glColor3f(0.05f, 0.02f, 0.15f);
+    glVertex2f(100, 100);
+    glVertex2f(-100, 100);
+    glEnd();
+}
+
+void drawThankYouStars() {
+    for (int i = 0; i < 80; i++) {
+        float sx = sX[i];
+        float sy = sY[i];
+        float twk = (sinf(thankyouTimer * 2.0f + i * 0.7f) + 1.0f) * 0.5f;
+        drawCircle(sx, sy, 0.3f + twk * 0.3f, 6, 0.8f + twk * 0.2f, 0.85f + twk * 0.15f, 1.0f);
+    }
+}
+
+void drawThankYouShootingStars() {
+    for (int i = 0; i < 3; i++) {
+        float sx = fmodf(thankyouTimer * (15.0f + i * 8.0f) + i * 70.0f, 250.0f) - 125.0f;
+        float sy = 50.0f - i * 30.0f + sinf(thankyouTimer + i) * 10.0f;
+        glColor3f(0.8f, 0.9f, 1.0f);
+        glBegin(GL_LINES);
+        glVertex2f(sx, sy);
+        glVertex2f(sx - 12.0f, sy - 3.0f);
+        glEnd();
+        drawCircle(sx, sy, 0.4f, 6, 1.0f, 1.0f, 1.0f);
+    }
+}
+
+void drawThankYouPlanets() {
+    float bob1 = sinf(thankyouTimer * 0.8f) * 5.0f;
+    float bob2 = sinf(thankyouTimer * 0.6f + 1.0f) * 4.0f;
+    drawCircle(-70, 20 + bob1, 12, 22, 1.0f, 0.85f, 0.0f);
+    drawCircle(-70, 20 + bob1, 9, 18, 1.0f, 0.92f, 0.30f);
+    drawCircle(75, -10 + bob2, 8, 18, 0.08f, 0.25f, 0.65f);
+    drawCircle(75, -10 + bob2, 6, 14, 0.12f, 0.40f, 0.75f);
+    drawCircle(73, -8 + bob2, 2, 8, 0.15f, 0.60f, 0.18f);
+}
+
+void drawThankYouRocket() {
+    float rocketX = fmodf(thankyouTimer * 25.0f, 300.0f) - 150.0f;
+    float rocketY = 40.0f + sinf(thankyouTimer * 2.0f) * 15.0f;
+    glPushMatrix();
+    glTranslatef(rocketX, rocketY, 0);
+    glRotatef(sinf(thankyouTimer * 2.0f) * 5.0f, 0, 0, 1);
+    drawRocket(0, 0, (sinf(thankyouTimer * 20.0f) + 1.0f) * 0.5f, true, 0.4f);
+    glPopMatrix();
+}
+
+void drawThankYouText() {
+    float fadeIn = smoothStep(thankyouTimer / 2.0f);
+    float pulse = sinf(thankyouTimer * 2.0f) * 0.1f + 0.9f;
+    if (fadeIn > 0.1f) {
+        glColor4f(1.0f, 0.90f, 0.30f, fadeIn * pulse);
+        drawLabel(-28, 30, "Thank You", GLUT_BITMAP_TIMES_ROMAN_24);
+        glColor4f(0.8f, 0.85f, 1.0f, fadeIn * 0.9f);
+        drawLabel(-35, 10, "For Playing Celestial Dreams", GLUT_BITMAP_HELVETICA_18);
+    }
+    if (thankyouTimer > 2.5f) {
+        float credFade = smoothStep((thankyouTimer - 2.5f) / 1.5f);
+        glColor4f(0.7f, 0.75f, 0.85f, credFade);
+        drawLabel(-30, -15, "A OpenGL Group Project", GLUT_BITMAP_HELVETICA_12);
+        drawLabel(-35, -30, "Bedroom -> Space -> Jupiter -> Europa", GLUT_BITMAP_HELVETICA_12);
+    }
+    if (thankyouTimer > 4.5f) {
+        float devFade = smoothStep((thankyouTimer - 4.5f) / 1.5f);
+        glColor4f(0.6f, 0.8f, 1.0f, devFade);
+        drawLabel(-50, -50, "DEV1: Bedroom & Treehouse", GLUT_BITMAP_HELVETICA_12);
+        drawLabel(-50, -62, "DEV2: Deep Space & Wall Zoom", GLUT_BITMAP_HELVETICA_12);
+        drawLabel(-50, -74, "DEV3: Journey & Landing", GLUT_BITMAP_HELVETICA_12);
+        drawLabel(-50, -86, "DEV4: Wake Up & Thank You", GLUT_BITMAP_HELVETICA_12);
+    }
+    if (thankyouTimer > 6.0f) {
+        float blink = (sinf(thankyouTimer * 3.0f) + 1.0f) * 0.5f;
+        glColor4f(1.0f, 1.0f, 1.0f, 0.5f + blink * 0.5f);
+        drawLabel(-15, -95, "Press R to restart", GLUT_BITMAP_HELVETICA_12);
+    }
+}
+
+// ==================== THANK YOU SCENE ====================
+
 void drawThankYouScene() {
-    drawRect(-100, -100, 200, 200, 0.0f, 0.0f, 0.0f);
-    glColor3f(0.5f, 0.5f, 0.5f);
-    drawLabel(-30, 0, "Coming in Phase 4", GLUT_BITMAP_HELVETICA_18);
+    drawThankYouBackground();
+    drawThankYouStars();
+    drawThankYouShootingStars();
+    drawThankYouPlanets();
+    drawThankYouRocket();
+    drawThankYouText();
 }
 
 // ============================================================
@@ -1787,6 +2126,14 @@ void mouseClick(int button, int state, int x, int y) {
             laserY = wy;
             laserActive = 1.0f;
         }
+
+        if (wakeMode) {
+            float dxBoy = wx + 15.0f;
+            float dyBoy = wy + 6.0f;
+            if (dxBoy * dxBoy + dyBoy * dyBoy <= 625.0f) {
+                wakeSpeed = 3.0f;
+            }
+        }
     }
 }
 
@@ -1824,6 +2171,12 @@ void keyboard(unsigned char key, int x, int y) {
         }
         if (key == '5') {
             wakeMode = true;
+            wakeTimer = 0.0f;
+            wakeHeadLift = 0.0f;
+            wakeHeadTurn = 0.0f;
+            fanSpin = 0.0f;
+            clockTime = 0.0f;
+            mousePosX = -130.0f;
         }
         if (key == '6') {
             wallMode = true;
@@ -1925,13 +2278,27 @@ void timerFunc(int) {
         alienDodgeY[i] *= 0.97f;
     }
 
+    if (wakeMode && wakeSpeed > 1.0f) {
+        wakeSpeed -= 0.005f;
+        if (wakeSpeed < 1.0f) {
+            wakeSpeed = 1.0f;
+        }
+    }
+
     if (wakeMode) {
-        wakeTimer += DT;
-        if (wakeTimer >= 6.0f) {
+        wakeTimer += DT * wakeSpeed;
+        if (wakeTimer > 0.4f) {
+            wakeHeadLift += 6.0f * DT * wakeSpeed;
+        }
+        if (wakeTimer > 5.9f) {
+            wakeHeadTurn += 40.0f * DT * wakeSpeed;
+        }
+        wakeHeadLift = clampFloat(wakeHeadLift, 0.0f, 3.0f);
+        wakeHeadTurn = clampFloat(wakeHeadTurn, 0.0f, 18.0f);
+        if (wakeHeadTurn >= 18.0f) {
             wakeMode = false;
             wallMode = true;
             wallTimer = 0.0f;
-            fanSpin = 0.0f;
         }
         return;
     }
@@ -1984,7 +2351,6 @@ void timerFunc(int) {
     if (jupiterLanding) {
         marsTimer += DT;
         marsPhaseTimer += DT;
-
         if (marsPhase == 0) {
             landRocketY -= 55.0f * DT;
             if (landRocketY <= -45.0f) {
@@ -2111,7 +2477,7 @@ int main(int argc, char **argv) {
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
     glutInitWindowSize(1000, 800);
     glutInitWindowPosition(100, 80);
-    glutCreateWindow("Celestial Dreams - Phase 3 (DEV1 + DEV2 + DEV3)");
+    glutCreateWindow("Celestial Dreams - Phase 4 Complete (All Devs)");
     init();
     glutDisplayFunc(display);
     glutMouseFunc(mouseClick);
